@@ -1,5 +1,6 @@
 package com.petshop.product.controller;
 
+import com.petshop.product.exception.ProductNotFoundException;
 import com.petshop.product.model.Product;
 import com.petshop.product.repository.ProductRepository;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,13 @@ public class ProductController {
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
+    }
+
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productRepository.deleteById(id);
