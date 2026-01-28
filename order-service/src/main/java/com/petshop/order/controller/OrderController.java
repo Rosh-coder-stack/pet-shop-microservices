@@ -1,39 +1,27 @@
 package com.petshop.order.controller;
 
 import com.petshop.order.model.Order;
-import com.petshop.order.repository.OrderRepository;
+import com.petshop.order.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import java.util.List;
-
+import org.springframework.http.ResponseEntity;
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private final OrderRepository orderRepository;
-    private final RestTemplate restTemplate;
-
-    public OrderController(OrderRepository orderRepository,RestTemplate restTemplate) {
-        this.orderRepository = orderRepository;
-        this.restTemplate = restTemplate;
-    }
+    @Autowired
+    private OrderService orderService;
 
     @PostMapping
-    public Order createOrder(@RequestBody Order order) {
-        // call Product Service
-        Object product = restTemplate.getForObject(
-                "http://localhost:8081/api/products/" + order.getProductId(),
-                Object.class
-        );
+    public ResponseEntity<?> createOrder(@RequestBody Order order) {
+        Order savedOrder = orderService.placeOrder(order);
 
-        if (product == null) {
-            throw new RuntimeException("Product not found");
+        if (savedOrder == null) {
+            return ResponseEntity
+                    .status(503)
+                    .body("Product service is currently unavailable. Please try later.");
         }
-        return orderRepository.save(order);
-    }
 
-    @GetMapping
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        return ResponseEntity.ok(savedOrder);
     }
 }
