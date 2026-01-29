@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
         <module name="product-service" />
+        <module name="auth-service" />
         <module name="discovery-server" />
         <module name="order-service" />
       </profile>
@@ -20,6 +21,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Discovery-server" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
+      <module name="auth-service" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
