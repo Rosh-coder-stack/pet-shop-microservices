@@ -36,4 +36,8 @@ public class OrderService {
         System.out.println("Product Service is currently unavailable");
         return null;
     }
+    public Order createOrder(Order order) {
+        return orderRepository.save(order);
+    }
+
 }

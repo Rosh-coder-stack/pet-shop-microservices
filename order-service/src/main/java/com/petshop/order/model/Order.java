@@ -1,6 +1,10 @@
 package com.petshop.order.model;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedBy;
+
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "orders")
@@ -12,6 +16,9 @@ public class Order {
 
     private Long productId;
     private int quantity;
+    private String createdBy;
+    private LocalDateTime createdAt;
+
 
     // getters and setters
 
@@ -38,4 +45,20 @@ public class Order {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
 }

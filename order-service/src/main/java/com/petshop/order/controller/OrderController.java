@@ -2,9 +2,12 @@ package com.petshop.order.controller;
 
 import com.petshop.order.model.Order;
 import com.petshop.order.service.OrderService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
+
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -12,16 +15,16 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    // CREATE ORDER
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody Order order) {
-        Order savedOrder = orderService.placeOrder(order);
+    public Order createOrder(@RequestBody Order order,
+                             @RequestHeader("X-USER-NAME") String username) {
 
-        if (savedOrder == null) {
-            return ResponseEntity
-                    .status(503)
-                    .body("Product service is currently unavailable. Please try later.");
-        }
+        order.setCreatedBy(username);
+        order.setCreatedAt(LocalDateTime.now());
 
-        return ResponseEntity.ok(savedOrder);
+        return orderService.createOrder(order);
     }
 }
+
+// GET ALL ORDERS (ADMIN

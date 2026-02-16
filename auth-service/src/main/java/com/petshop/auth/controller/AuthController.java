@@ -4,6 +4,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.petshop.auth.util.JwtUtil;
+import com.petshop.auth.entity.User;
+import com.petshop.auth.repository.UserRepository;
+
 
 
 @RestController
@@ -11,21 +14,28 @@ import com.petshop.auth.util.JwtUtil;
 public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private UserRepository userRepo;
+
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> request) {
+    public Map<String,String> login(@RequestBody Map<String,String> req){
 
-        String username = request.get("username");
-        String password = request.get("password");
+        String username = req.get("username");
+        String password = req.get("password");
 
-        // TEMP check
-        if ("admin".equals(username) && "admin".equals(password)) {
-            String role = "USER";   // for now (simple)
+        User user = userRepo.findByUsername(username);
 
-            String token = jwtUtil.generateToken(username, role);
-
-            return Map.of("token", token);
+        if(user == null || !user.getPassword().equals(password)){
+            throw new RuntimeException("Invalid login");
         }
 
-        throw new RuntimeException("Invalid credentials");
+        String token = jwtUtil.generateToken(
+                user.getUsername(),
+                user.getRole()
+        );
+
+        return Map.of("token", token);
+
     }
+
 }
