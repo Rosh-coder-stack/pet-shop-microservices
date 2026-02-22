@@ -6,10 +6,10 @@ spring:
     name: order-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/petshopdb
+    url: jdbc:postgresql://localhost:5433/order_db
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: '1234'
+    password: 1234
 
   jpa:
     hibernate:

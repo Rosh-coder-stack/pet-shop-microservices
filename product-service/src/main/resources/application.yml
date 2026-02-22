@@ -11,7 +11,7 @@ spring:
       ddl-auto: update
     show-sql : true
   datasource:
-    url: jdbc:postgresql://localhost:5433/petshopdb
+    url: jdbc:postgresql://localhost:5433/product_db
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: '1234'

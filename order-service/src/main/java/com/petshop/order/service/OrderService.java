@@ -6,7 +6,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
+import com.petshop.order.model.OrderStatus;
 @Service
 public class OrderService {
 
@@ -37,6 +37,15 @@ public class OrderService {
         return null;
     }
     public Order createOrder(Order order) {
+        return orderRepository.save(order);
+    }
+
+    public Order updateOrderStatus(Long id, OrderStatus status) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(status);
         return orderRepository.save(order);
     }
 

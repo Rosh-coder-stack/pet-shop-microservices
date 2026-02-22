@@ -2,7 +2,7 @@ package com.petshop.order.model;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedBy;
-
+import com.petshop.order.model.OrderStatus;
 import java.time.LocalDateTime;
 
 
@@ -18,7 +18,8 @@ public class Order {
     private int quantity;
     private String createdBy;
     private LocalDateTime createdAt;
-
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     // getters and setters
 
@@ -59,6 +60,14 @@ public class Order {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 
 }
