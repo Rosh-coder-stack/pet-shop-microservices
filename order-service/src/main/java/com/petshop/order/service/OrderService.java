@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.petshop.order.model.OrderStatus;
+import org.springframework.context.ApplicationEventPublisher;
 @Service
 public class OrderService {
 
@@ -15,6 +16,8 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @CircuitBreaker(name = "productService", fallbackMethod = "productFallback")
     public Order placeOrder(Order order) {
@@ -40,13 +43,28 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public Order updateOrderStatus(Long id, OrderStatus status) {
+    public Order updateOrderStatus(Long id, OrderStatus newStatus) {
 
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        order.setStatus(status);
+        // 🔥 reduce stock ONLY when order becomes PAID
+        if (newStatus == OrderStatus.PAID) {
+
+            restTemplate.put(
+                    "http://PRODUCT-SERVICE/api/products/"
+                            + order.getProductId()
+                            + "/reduce-stock",
+                    null
+            );
+        }
+
+        order.setStatus(newStatus);
         return orderRepository.save(order);
+    }
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
     }
 
 }
