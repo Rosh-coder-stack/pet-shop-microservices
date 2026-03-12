@@ -21,7 +21,7 @@ public class Product {
 
     @Positive(message = "Price must be greater than 0")
     private double price;
-
+    private int stock;
     public Long getId() {
         return id;
     }
@@ -54,6 +54,9 @@ public class Product {
         this.price = price;
     }
 
-
+    public int getStock(){return stock;}
+    public void setStock(int stock){
+        this.stock  = stock;
+    }
 
 }

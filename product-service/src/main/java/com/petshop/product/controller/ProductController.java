@@ -8,16 +8,20 @@ import jakarta.validation.Valid;
 
 
 import java.util.List;
-
+import com.petshop.product.service.ProductService;
+import org.springframework.http.ResponseEntity;
 @RestController //This class handles HTTP requests (API)
 @RequestMapping("/api/products") //base URL.
 
 public class ProductController {
 
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository,
+                             ProductService productService) {
         this.productRepository = productRepository;
+        this.productService = productService;
     }
 
     @PostMapping
@@ -106,5 +110,18 @@ public class ProductController {
 
         return productRepository.save(product);
     }
+    @PutMapping("/reduce")
+    public ResponseEntity<?> reduceStock(@RequestParam Long productId,
+                                         @RequestParam int quantity) {
+
+        Product product = productService.reduceStock(productId, quantity);
+
+        if(product == null){
+            return ResponseEntity.badRequest().body("Out of stock");
+        }
+
+        return ResponseEntity.ok(product);
+    }
+
 
 }
